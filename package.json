@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "",
+  "repository": "https://github.com/flycran/auto-unit.git",
+  "homepage": "https://github.com/flycran/auto-unit",
   "devDependencies": {
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2"
@@ -16,6 +17,6 @@
   "keywords": [
     "Automatically select the appropriate unit of measurement"
   ],
-  "author": "",
+  "author": "Flycran",
   "license": "ISC"
 }
