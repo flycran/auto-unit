@@ -1,14 +1,14 @@
 {
   "name": "auto-unit",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "dependencies": {
+  "repository": "",
+  "devDependencies": {
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2"
   },
-  "devDependencies": {},
   "scripts": {
     "build": "tsc",
     "test": "ts-node test/index.ts"
