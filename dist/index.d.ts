@@ -1,21 +1,28 @@
 export type DecimalPlace = number | `-${number}` | `${number}-` | `${number}-${number}` | undefined;
 export interface AutoUnitOptions {
-    decimal?: number;
+    baseDigit?: number;
     threshold?: number;
-    exponential?: number;
-    decimalPlace?: DecimalPlace;
+    decimal?: DecimalPlace;
 }
 export default class AutoUnit {
-    private readonly decimal;
-    private readonly threshold;
-    private readonly exponential?;
-    private readonly decimalPlace?;
-    private readonly units;
-    constructor(units: string[], option?: AutoUnitOptions);
+    readonly units: (string | number)[];
+    readonly threshold: number;
+    readonly decimal?: DecimalPlace;
+    readonly unitsStr: string[];
+    constructor(units: (string | number)[], option?: AutoUnitOptions);
     getUnit(num: number): {
+        num: number;
+        unit: string | number;
+    };
+    toString(num: number, decimal?: DecimalPlace): string;
+    fromUnit(num: number, unit: string): number;
+    sepUnit(str: string): {
         num: number;
         unit: string;
     };
-    toString(num: number, decimalPlace?: DecimalPlace): string;
+    fromString(str: string): number;
+    convertUnit(num: number, unit: string, decimal?: number): string;
     private toFraction;
 }
+export declare const measUnit: AutoUnit;
+export declare const distanceUnit: AutoUnit;
