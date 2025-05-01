@@ -7,16 +7,22 @@
   "repository": "https://github.com/flycran/auto-unit.git",
   "homepage": "https://github.com/flycran/auto-unit",
   "devDependencies": {
+    "@jest/types": "^29.6.3",
     "ts-node": "^10.9.1",
-    "typescript": "^5.3.2"
+    "typescript": "^5.8.3"
   },
   "scripts": {
     "build": "tsc",
-    "test": "ts-node test/index.ts"
+    "test": "jest"
   },
   "keywords": [
     "Automatically select the appropriate unit of measurement"
   ],
   "author": "Flycran",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.2"
+  }
 }

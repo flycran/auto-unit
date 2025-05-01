@@ -1,187 +1,73 @@
-# 介绍
+# auto-unit
 
-`auto-unit` 是一个精简的，自动选择合适的计量单位的库。
+<div align="center">
+<a href="./README.zh.md">中文文档</a>
+</div>
 
-# 特性
-
-- 自动选择合适的计量单位
-- 支持自动切换科学计数法
-- 支持自定义进制位数
-- 支持自定义单位列表
-- 支持自定义小数位数
-- 支持自定义阈值
-
-# 安装
-
-```bash
-npm install auto-unit
+**Class: `AutoUnit`**
+`AutoUnit` is a utility class designed for automatic unit conversion. It supports custom unit systems, threshold settings, and decimal precision configurations.
+##### **Constructor**
+``` typescript
+constructor(units: (string | number)[], option: AutoUnitOptions = {})
 ```
+- **Parameters**:
+  - `units`: An array of units where even indices represent unit names (strings or numbers), and odd indices represent their conversion bases.
+  - : Configuration options.
+    - `baseDigit?`: Base digit for automatic unit generation. If provided, it will generate a complete list of units based on this base.
+    - `threshold?`: Threshold value, default is `1`. Affects the condition for unit switching.
+    - `decimal?`: Decimal configuration, can be a fixed number of decimal places or a range format.
 
-# 使用
+`option`
 
-```ts
-const au = new AutoUnit([ 'b', 'kb', 'mb' ], {
-  decimal: 1024,
-})
+##### **Methods**
+###### `getUnit(num: number)`
+Retrieves the corresponding unit and adjusted value based on the input number.
+- **Parameters**:
+  - `num`: Input number.
 
-console.log(au.toString(1024)) // 1kb
-```
+- **Returns**:
+  - `{ num: number, unit: string }`: The adjusted number and its corresponding unit.
 
-# API
+###### `toString(num: number, decimal = this.decimal)`
+Converts a number to its string representation with an optional decimal configuration.
+- **Parameters**:
+  - `num`: Input number.
+  - `decimal?`: Decimal configuration, defaults to the instance's default value.
 
-## AutoUnit
+- **Returns**:
+  - A formatted string containing the number and its unit.
 
-```ts
-export default class AutoUnit {
-  constructor(units: string[], options?: AutoUnitOptions) {
-  }
-}
-```
+###### `fromUnit(num: number, unit: string)`
+Converts a number from a specified unit to the base unit.
+- **Parameters**:
+  - `num`: Number to be converted.
+  - `unit`: The unit from which the number will be converted.
 
-### 参数
+- **Returns**:
+  - The number converted to the base unit.
 
-- **units**
+###### `sepUnit(str: string)`
+Separates the numeric part and the unit from a given string.
+- **Parameters**:
+  - `str`: A string containing a numeric value followed by a unit.
 
-    - 类型: `string[]`
-    - 示例: `['b', 'kb', 'mb', 'gb', 'tb']`
+- **Returns**:
+  - `{ num: number, unit: string }`: The separated numeric value and unit.
 
-  > 计量单位列表
+###### `fromString(str: string)`
+Converts a string representation into a formatted value in the base unit.
+- **Parameters**:
+  - `str`: A string containing a numeric value and unit.
 
-- **options**
+- **Returns**:
+  - The formatted value derived from the numeric part and unit extracted from the input string.
 
-    - 类型: [AutoUnitOptions](#AutoUnitOptions)
-    - 示例: `{ decimal: 1024 }`
-    - 可选
+###### `convertUnit(num: number, unit: string, decimal?: number)`
+Converts a number from one unit to the optimal unit, with the option to specify decimal precision.
+- **Parameters**:
+  - `num`: The number to be converted.
+  - `unit`: The original unit.
+  - `decimal?`: The number of decimal places for the formatted output.
 
-  > [配置项](#AutoUnitOptions)
-
-## getUnit
-
-```ts
-export default class AutoUnit {
-  getUnit(num: number): { unit: string; num: number } {
-  }
-}
-```
-
-### 参数
-
-- **num**
-
-    - 类型: `number`
-    - 示例值: `1024 * 10`
-
-  > 数字，根据`num`自动选择合适的计量单位
-
-### 返回值
-
-> 返回值`unit`表示单位，`num`表示转换后的数字
-
-## toString
-
-```ts
-export default class AutoUnit {
-  toString(num: number, decimalPlace?: number): string {
-  }
-}
-```
-
-### 参数
-
-- **num**
-
-  - 类型: `number`
-  - 示例值: `1024 * 10`
-
-  >   数字，根据`num`自动选择合适的计量单位
-
-  - **decimalPlace**
-
-  - 类型: `number`
-  - 示例值: `2`
-
-  > 覆盖`option.decimalPlace`
-  >
-  > 具体效果见[DecimalPlace](#DecimalPlace)
-
-# Interface
-
-## AutoUnitOptions
-
-```ts
-export interface AutoUnitOptions {
-  /** 进制位数 */
-  decimal?: number
-  /** 阈值 */
-  threshold?: number
-  /** 科学计数法 */
-  exponential?: number
-  /** 小数位数 */
-  decimalPlace?: DecimalPlace
-}
-```
-
-### decimal
-
-- 类型: `number`
-- 示例值: `1000`
-- 可选
-
-> 进制位数
-
-### threshold
-
-- 类型: `number`
-- 示例值: `1024`
-- 默认值: `1`
-- 可选
-
-> 阈值
-> 表述超出进制位数的多少后开始升级单位
->
-> 例如当设置`threshold`为`1024*2`时，只有当`num`大于等于`2048`时才会使用`kb`为单位。
-> 当然也可以设置为负数，例如`-24`，当`num`大于大于`1000`的时候就使用`kb`为单位。
-
-### exponential
-
-- 类型: `number`
-- 示例值: `1000`
-- 可选
-
-> 科学计数法
->
-> 例如`1024 * 1024 * 1000`会被转换为`1e+3md`
->
-> 科学计数法的生效与单位无关，只要最后的数字部分超过`exponential`就会生效。
-
-### decimalPlace
-
-- 类型: [DecimalPlace](#DecimalPlace)
-- 示例值: `2-1`
-- 可选
-
-> [小数位数](#DecimalPlace)
-
-## DecimalPlace
-
-```ts
-export type DecimalPlace =
-  | number
-  | `-${ number }`
-  | `${ number }-`
-  | `${ number }-${ number }`
-  | undefined
-```
-
-> 描述小数位数
->
-> 当使用`number`时，固定小数位数，行为类似`toFixed`
->
-> 当使用`min-max`时表示小数位保持在`min`到`max`之间，如果小数位不足`min`则填充`0`，如果超过`max`则截断
-> 
-> `min`和`max`各自可选,如果不指定，则表示不限制。但不能同时不指定，因为这样没有任何意义
-
-# 扩展
-
-> 你可以通过`extend`关键字来扩展`AutoUnit`。
-> 具体的做法应该参考typescript的类的继承。
+- **Returns**:
+  - A string representation of the converted number, formatted to the specified decimal precision if provided.
