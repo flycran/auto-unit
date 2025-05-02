@@ -50,10 +50,7 @@ console.log(autoUnit.format(1000)) // 1m
 ```
 
 > You can customize conversion bases between units. For example, [ 'mm', 10, 'cm', 100, 'm', 1e3, 'km' ] means:
-> - 1mm = 10 base units
-> - 1cm = 100 base units
-> - 1m = 1e3 base units
-> - 1km = 1e6 base units
+> 1 cm equals 10 mm, 1 m equals 100 cm, and 1 km equals 1000 m.
 
 - **High Precision & Large Integers**
 
