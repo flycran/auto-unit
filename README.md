@@ -1,73 +1,176 @@
-# auto-unit
+# AutoUnit
+
+English documentation is translated by AI. If you have any questions about the content, please refer to the [Chinese document](./README.zh.md). Contributions to improve translations are welcome.
 
 <div align="center">
 <a href="./README.zh.md">中文文档</a>
+|
+<a href="./README.md">English</a>
 </div>
 
-**Class: `AutoUnit`**
-`AutoUnit` is a utility class designed for automatic unit conversion. It supports custom unit systems, threshold settings, and decimal precision configurations.
-##### **Constructor**
-``` typescript
-constructor(units: (string | number)[], option: AutoUnitOptions = {})
+`AutoUnit` is a utility class for automatic unit conversion, supporting custom unit systems, thresholds, and decimal place configurations.
+
+- Automatically selects appropriate units to output formatted strings
+- Reverse parses numeric values from unit-formatted strings
+- Quickly build any unit system
+- Supports high-precision calculations
+- Supports calculations beyond JS safe number ranges
+
+## Quick Links
+
+- [Quick Start](#quick-start)
+- [Best Practices](#best-practices)
+- [API](#api)
+- [Contributing](#contributing)
+
+## Quick Start
+
+- **Fixed-base Units**
+
+```ts
+import AutoUnit from 'auto-unit';
+
+const autoUnit = new AutoUnit([ 'B', 'KB', 'MB', 'GB', 'TB', 'PB' ], {
+  baseDigit: 1024,
+})
+
+console.log(autoUnit.toString(1024 * 1024 * 100)) // 100MB
 ```
-- **Parameters**:
-  - `units`: An array of units where even indices represent unit names (strings or numbers), and odd indices represent their conversion bases.
-  - : Configuration options.
-    - `baseDigit?`: Base digit for automatic unit generation. If provided, it will generate a complete list of units based on this base.
-    - `threshold?`: Threshold value, default is `1`. Affects the condition for unit switching.
-    - `decimal?`: Decimal configuration, can be a fixed number of decimal places or a range format.
 
-`option`
+> The `baseDigit` parameter represents the conversion base between units. For example, 1024 means 1KB equals 1024 bytes.
 
-##### **Methods**
-###### `getUnit(num: number)`
-Retrieves the corresponding unit and adjusted value based on the input number.
+- **Variable-base Units**
+
+```ts
+import AutoUnit from 'auto-unit';
+
+const autoUnit = new AutoUnit([ 'mm', 10, 'cm', 100, 'm', 1e3, 'km' ])
+
+console.log(autoUnit.toString(1000)) // 1m
+```
+
+> You can customize conversion bases between units. For example, [ 'mm', 10, 'cm', 100, 'm', 1e3, 'km' ] means:
+> - 1mm = 10 base units
+> - 1cm = 100 base units
+> - 1m = 1e3 base units
+> - 1km = 1e6 base units
+
+- **High Precision & Large Integers**
+
+```ts
+import AutoUnit from 'auto-unit';
+
+const units = [ 'mm', 10, 'cm', 100, 'm', 1e3, 'km', 1e3, 'Mm', 1e3, 'Gm', 1e3, 'Tm' ]
+const autoUnit = new AutoUnit(units, { decimalSafety: true })
+
+console.log(autoUnit.toString(1e18)) // 1000Tm
+```
+
+> The `highPrecision` parameter enables high-precision mode using `decimal.js`. It supports `number`, `string`, `BigInt`, and `Decimal` inputs.
+
+## Best Practices
+
+- For most use cases requiring formatted unit strings, consider wrapping `toString`:
+
+```ts
+import AutoUnit from 'auto-unit';
+
+const autoUnit = new AutoUnit([ 'B', 'KB', 'MB', 'GB', 'TB', 'PB' ], {
+  baseDigit: 1024,
+})
+
+export const formatFileSize = (num: number) => {
+  return autoUnit.toString(num)
+}
+```
+
+- In modular projects (e.g., React/Vue), pre-initialize unit systems globally (e.g., in `utils/units.ts`) rather than recreating them per component.
+
+## API
+
+### **Constructor**
+
+```typescript
+constructor(
+    readonly units: (string | number)[],
+    option: AutoUnitOptions<DS> = {},
+  ) {}
+```
+
 - **Parameters**:
-  - `num`: Input number.
+  - `units`: Unit array. Without `baseDigit`, even indices are unit names (string/number), odd indices are conversion bases. With `baseDigit`, automatically generates conversion bases.
+  - `option`: Configuration options.
+    - `baseDigit?`: Base number for auto-generating unit conversions.
+    - `threshold?`: Unit switch threshold (default: `1`).
+    - `decimal?`: Decimal configuration (fixed number or range format).
+    - `highPrecision?`: Enables `decimal.js` for precise calculations.
+
+### **Methods**
+
+###### `getUnit(num: Num<DS>)`
+
+Gets the optimal unit and converted value from base units.
+
+- **Parameters**:
+  - `num`: Input number. Supports `number`, `string`, `BigInt`, and `Decimal` in high-precision mode.
 
 - **Returns**:
-  - `{ num: number, unit: string }`: The adjusted number and its corresponding unit.
+  - `{ num: number, unit: string, decimal: Decimal }`: Converted value with unit. Includes `Decimal` in high-precision mode.
 
-###### `toString(num: number, decimal = this.decimal)`
-Converts a number to its string representation with an optional decimal configuration.
+###### `format(num: Num<DS>, decimal = this.decimal)`
+
+Formats a number into a unit-string representation.
+
 - **Parameters**:
-  - `num`: Input number.
-  - `decimal?`: Decimal configuration, defaults to the instance's default value.
+  - `num`: Input number (supports extended types in high-precision mode).
+  - `decimal?`: Overrides default decimal configuration.
 
 - **Returns**:
-  - A formatted string containing the number and its unit.
+  - Formatted string with value and unit.
 
-###### `fromUnit(num: number, unit: string)`
-Converts a number from a specified unit to the base unit.
+###### `toBase(num: Num<DS>, unit: string)`
+
+Converts a unit-formatted number back to base units.
+
 - **Parameters**:
-  - `num`: Number to be converted.
-  - `unit`: The unit from which the number will be converted.
+  - `num`: Input value in specified unit.
+  - `unit`: Current unit.
 
 - **Returns**:
-  - The number converted to the base unit.
+  - Converted value in base units (`number` or `Decimal`).
 
-###### `sepUnit(str: string)`
-Separates the numeric part and the unit from a given string.
+###### `splitUnit(str: string)`
+
+Extracts numeric value and unit from a string.
+
 - **Parameters**:
-  - `str`: A string containing a numeric value followed by a unit.
+  - `str`: Input string containing value and unit.
 
 - **Returns**:
-  - `{ num: number, unit: string }`: The separated numeric value and unit.
+  - `{ num: number, unit: string, decimal: Decimal }`: Parsed components with `Decimal` in high-precision mode.
 
-###### `fromString(str: string)`
-Converts a string representation into a formatted value in the base unit.
+###### `parse(str: string)`
+
+Converts a unit-formatted string to base unit value.
+
 - **Parameters**:
-  - `str`: A string containing a numeric value and unit.
+  - `str`: Input string.
 
 - **Returns**:
-  - The formatted value derived from the numeric part and unit extracted from the input string.
+  - Converted value in base units (`number` or `Decimal`).
 
-###### `convertUnit(num: number, unit: string, decimal?: number)`
-Converts a number from one unit to the optimal unit, with the option to specify decimal precision.
+###### `fromUnitFormat(num: number, unit: string, decimal?: DecimalPlace)`
+
+Converts between units and formats with specified decimals.
+
 - **Parameters**:
-  - `num`: The number to be converted.
-  - `unit`: The original unit.
-  - `decimal?`: The number of decimal places for the formatted output.
+  - `num`: Input value.
+  - `unit`: Source unit.
+  - `decimal?`: Overrides default decimal configuration.
 
 - **Returns**:
-  - A string representation of the converted number, formatted to the specified decimal precision if provided.
+  - Formatted string with converted value and unit.
+
+## Contributing
+
+Contributions of all forms are welcome, including bug reports, documentation improvements, translation updates, and test enhancements.
