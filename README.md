@@ -34,7 +34,7 @@ const autoUnit = new AutoUnit([ 'B', 'KB', 'MB', 'GB', 'TB', 'PB' ], {
   baseDigit: 1024,
 })
 
-console.log(autoUnit.toString(1024 * 1024 * 100)) // 100MB
+console.log(autoUnit.format(1024 * 1024 * 100)) // 100MB
 ```
 
 > The `baseDigit` parameter represents the conversion base between units. For example, 1024 means 1KB equals 1024 bytes.
@@ -46,7 +46,7 @@ import AutoUnit from 'auto-unit';
 
 const autoUnit = new AutoUnit([ 'mm', 10, 'cm', 100, 'm', 1e3, 'km' ])
 
-console.log(autoUnit.toString(1000)) // 1m
+console.log(autoUnit.format(1000)) // 1m
 ```
 
 > You can customize conversion bases between units. For example, [ 'mm', 10, 'cm', 100, 'm', 1e3, 'km' ] means:
@@ -63,14 +63,14 @@ import AutoUnit from 'auto-unit';
 const units = [ 'mm', 10, 'cm', 100, 'm', 1e3, 'km', 1e3, 'Mm', 1e3, 'Gm', 1e3, 'Tm' ]
 const autoUnit = new AutoUnit(units, { decimalSafety: true })
 
-console.log(autoUnit.toString(1e18)) // 1000Tm
+console.log(autoUnit.format(1e18)) // 1000Tm
 ```
 
 > The `highPrecision` parameter enables high-precision mode using `decimal.js`. It supports `number`, `string`, `BigInt`, and `Decimal` inputs.
 
 ## Best Practices
 
-- For most use cases requiring formatted unit strings, consider wrapping `toString`:
+- For most use cases requiring formatted unit strings, consider wrapping `format`:
 
 ```ts
 import AutoUnit from 'auto-unit';
@@ -80,7 +80,7 @@ const autoUnit = new AutoUnit([ 'B', 'KB', 'MB', 'GB', 'TB', 'PB' ], {
 })
 
 export const formatFileSize = (num: number) => {
-  return autoUnit.toString(num)
+  return autoUnit.format(num)
 }
 ```
 

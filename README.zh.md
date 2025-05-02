@@ -32,7 +32,7 @@ const autoUnit = new AutoUnit([ 'B', 'KB', 'MB', 'GB', 'TB', 'PB' ], {
   baseDigit: 1024,
 })
 
-console.log(autoUnit.toString(1024 * 1024 * 100)) // 100MB
+console.log(autoUnit.format(1024 * 1024 * 100)) // 100MB
 ```
 
 > `baseDigit`参数表示每个单位的进制数，比如1024，表示1KB等于1024字节。
@@ -44,7 +44,7 @@ import AutoUnit from 'auto-unit';
 
 const autoUnit = new AutoUnit([ 'mm', 10, 'cm', 100, 'm', 1e3, 'km' ])
 
-console.log(autoUnit.toString(1000)) // 1m
+console.log(autoUnit.format(1000)) // 1m
 ```
 
 > 你可以自定义每个单位之间的换算基数，比如[ 'mm', 10, 'cm', 100, 'm', 1e3, 'km' ]
@@ -58,7 +58,7 @@ import AutoUnit from 'auto-unit';
 const units = [ 'mm', 10, 'cm', 100, 'm', 1e3, 'km', 1e3, 'Mm', 1e3, 'Gm', 1e3, 'Tm' ]
 const autoUnit = new AutoUnit(units, { decimalSafety: true })
 
-console.log(autoUnit.toString(1e18)) // 1000Tm
+console.log(autoUnit.format(1e18)) // 1000Tm
 ```
 
 > `highPrecision`参数表示是否开启高精度模式，开启后，将使用`decimal.js`进行安全的计算，你可以直接提供
@@ -66,7 +66,7 @@ console.log(autoUnit.toString(1e18)) // 1000Tm
 
 ## 最佳实践
 
-- 大多数场景下只需要拼接单位的功能，如果你需要更方便的调用，你可以简单的封装toString
+- 大多数场景下只需要拼接单位的功能，如果你需要更方便的调用，你可以简单的封装`format`
 
 ```ts
 import AutoUnit from 'auto-unit';
@@ -75,8 +75,8 @@ const autoUnit = new AutoUnit([ 'B', 'KB', 'MB', 'GB', 'TB', 'PB' ], {
   baseDigit: 1024,
 })
 
-export const distanceUnit = (num: number) => {
-  return autoUnit.toString(num)
+export const formatFileSize = (num: number) => {
+  return autoUnit.format(num)
 }
 ```
 
