@@ -61,7 +61,7 @@ console.log(autoUnit.format(1000)) // 1m
 import AutoUnit from 'auto-unit';
 
 const units = [ 'mm', 10, 'cm', 100, 'm', 1e3, 'km', 1e3, 'Mm', 1e3, 'Gm', 1e3, 'Tm' ]
-const autoUnit = new AutoUnit(units, { decimalSafety: true })
+const autoUnit = new AutoUnit(units, { highPrecision: true })
 
 console.log(autoUnit.format(1e18)) // 1000Tm
 ```
@@ -90,11 +90,13 @@ export const formatFileSize = (num: number) => {
 
 ### **Constructor**
 
-```typescript
-constructor(
-    readonly units: (string | number)[],
-    option: AutoUnitOptions<DS> = {},
+```ts
+class AutoUnit {
+  constructor(
+          readonly units: (string | number)[],
+          option: AutoUnitOptions<DS> = {},
   ) {}
+}
 ```
 
 - **Parameters**:

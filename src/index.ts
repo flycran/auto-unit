@@ -54,7 +54,7 @@ export default class AutoUnit<HP extends boolean = false> {
   readonly threshold: number
   readonly decimal?: DecimalPlace
   readonly unitsStr: string[] = []
-  readonly decimalSafety: HP
+  readonly highPrecision: HP
 
   constructor(
     readonly units: (string | number)[],
@@ -63,7 +63,7 @@ export default class AutoUnit<HP extends boolean = false> {
     if(!units.length) throw new Error('units is empty.')
     this.threshold = option.threshold || 1
     this.decimal = option.decimal
-    this.decimalSafety = option.highPrecision
+    this.highPrecision = option.highPrecision
     if(option.baseDigit) {
       const us = []
       for(let i = 0; i < units.length; i++) {
@@ -89,7 +89,7 @@ export default class AutoUnit<HP extends boolean = false> {
     if(!AutoUnit.ignoreNaNInputs && Number.isNaN(num)) throw new Error(ERROR_NAN_INPUT)
     let i = 1
 
-    if(this.decimalSafety) {
+    if(this.highPrecision) {
       let dn = new Decimal(typeof num === 'bigint' ? num.toString() : num)
       while(i < this.units.length - 1) {
         const n = this.units[i]
@@ -177,7 +177,7 @@ export default class AutoUnit<HP extends boolean = false> {
     if(!AutoUnit.ignoreNaNInputs && Number.isNaN(num)) throw new Error(ERROR_NAN_INPUT)
     let i = 0
 
-    if(this.decimalSafety) {
+    if(this.highPrecision) {
       // 高精度计算
       let dn = new Decimal(typeof num === 'bigint' ? num.toString() : num)
       while(i < this.units.length) {
@@ -231,7 +231,7 @@ export default class AutoUnit<HP extends boolean = false> {
     return {
       num: +num,
       unit,
-      decimal: this.decimalSafety ? new Decimal(num) : undefined,
+      decimal: this.highPrecision ? new Decimal(num) : undefined,
     }
   }
 
