@@ -11,9 +11,19 @@ export default defineConfig([
       tsconfig: './tsconfig.build.json',
     }) ],
     output: {
-      file: './dist/node.esm.js',
-      format: 'es',
-      entryFileNames: '[name].[format].js',
+      file: './dist/index.js',
+      format: 'cjs',
+    },
+    external: [ 'decimal.js' ],
+  },
+  {
+    input: './src/index.ts',
+    plugins: [ resolve(), commonjs(), typescript({
+      tsconfig: './tsconfig.build.json',
+    }) ],
+    output: {
+      file: './dist/index.esm.js',
+      format: 'esm',
     },
     external: [ 'decimal.js' ],
   },

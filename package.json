@@ -3,6 +3,7 @@
   "version": "3.0.0",
   "description": "",
   "main": "dist/index.js",
+  "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "repository": "https://github.com/flycran/auto-unit.git",
   "homepage": "https://github.com/flycran/auto-unit",
@@ -29,7 +30,7 @@
     "Automatically select the appropriate unit of measurement"
   ],
   "author": "Flycran",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "decimal.js": "^10.5.0"
   }
