@@ -97,7 +97,7 @@ class AutoUnit {
 ```
 
 - **Parameters**:
-  - `units`: Unit array. Without `baseDigit`, even indices are unit names (string/number), odd indices are conversion bases. With `baseDigit`, automatically generates conversion bases.
+  - `units`: Unit array.
   - `option`: Configuration options.
     - `baseDigit?`: Base number for auto-generating unit conversions.
     - `threshold?`: Unit switch threshold (default: `1`).
