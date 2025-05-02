@@ -6,3 +6,4 @@
 /countUnit
 /jest.config.js
 /rollup.config.ts
+/tsconfig.tsbuildinfo
