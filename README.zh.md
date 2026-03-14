@@ -1,5 +1,6 @@
 ## AutoUnit
-
+![npm](https://img.shields.io/npm/v/auto-unit)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/auto-unit)
 <div align="center">
 <a href="./README.zh.md">中文文档</a>
 |

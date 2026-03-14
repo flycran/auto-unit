@@ -49,7 +49,7 @@ export const ERROR_NAN_INPUT = 'Accepting NaN as an argument may be unintentiona
 
 export const ERROR_HIGH_PRECISION_NOT_ENABLED = 'By default, only number input is supported. To enable high-precision calculations, explicitly set the decimalSafety parameter to true.'
 
-export default class AutoUnit<HP extends boolean = false> {
+export class AutoUnit<HP extends boolean = false> {
   static ignoreNaNInputs = false
   readonly threshold: number
   readonly decimal?: DecimalPlace
@@ -264,3 +264,5 @@ export default class AutoUnit<HP extends boolean = false> {
     return this.format(nnum, decimal)
   }
 }
+
+export default AutoUnit
